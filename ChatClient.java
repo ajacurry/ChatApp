@@ -35,7 +35,8 @@ private static DataInputStream DIS = null;
                     break;
                 }
             }
-
+            DOS.close();
+            DIS.close();
             reader.close();
             writer.close();
             consoleReader.close();
@@ -52,22 +53,24 @@ private static DataInputStream DIS = null;
         File file = new File(filePath);
         FileInputStream fileInputStream
             = new FileInputStream(file);
+            System.out.println("File opened");
  
         // Here we send the File to Server
         DOS.writeLong(file.length());
-        // Here we  break file into chunks
+        System.out.println("File Sent to server");
+        // Here we  break file into chunks;
         byte[] buffer = new byte[4 * 1024];
-        while ((bytes = fileInputStream.read(buffer))
-               != -1) {
+        while ((bytes = fileInputStream.read(buffer))!= -1) {
           // Send the file to Server Socket  
           DOS.write(buffer, 0, bytes);
             DOS.flush();
         }
+        System.out.println("file sent to server socket");
         // close the file here
         fileInputStream.close();
     }
     catch(Exception e){
-        System.out.println("Something went wrong");
+        System.out.println("Something went wrong on client end");
 
     }
     }
