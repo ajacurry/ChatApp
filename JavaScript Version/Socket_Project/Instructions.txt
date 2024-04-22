@@ -1,0 +1,9 @@
+in terminal cd to the Socket Project folder of our app
+You must have Node and npm installed on computer
+use node --version and npm --version in command line to check if you have it
+Download express.js using : 
+npm install --save express socket.io
+Download nodemon using
+npm install -g nodemon
+Run js file using:
+nodemon JS.js
