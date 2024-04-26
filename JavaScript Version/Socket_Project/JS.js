@@ -21,15 +21,14 @@ io.on('connection', function(socket){
       }
    });
    socket.on('msg', function(data){
-      //Send message to everyone
       io.sockets.emit('newmsg', data);
    })
 });
+
 io.on("connection", (socket) => {
    socket.on("upload", (file, callback) => {
-     console.log(file); // <Buffer 25 50 44 ...>
+     console.log(file); 
  
-     // save the content to the disk, for example
      writeFile("/tmp/upload", file, (err) => {
        callback({ message: err ? "failure" : "success" });
      });
