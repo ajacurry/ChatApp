@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
-   <head><title>Hello world</title></head>
+   <head><title>Chat App</title></head>
+   
    <script src="/socket.io/socket.io.js"></script>
    <script>
+
       var socket = io();
       function setUsername(){
          socket.emit('setUsername', document.getElementById('name').value);
@@ -15,7 +17,7 @@
          user = data.username;
          document.body.innerHTML = '<input type="text" id="message">\
          <button type="button" name="button" onclick="sendMessage()">Send</button>\
-         <div id="message-container"></div>';
+         <div id="message-container"></div>\ <input type="file" onchange="upload(this.files)" />\ <script src="/path/to/socket.io.js"><script>\ ';
       });
       function sendMessage(){
          var msg = document.getElementById('message').value;
@@ -29,7 +31,18 @@
          }
       })
    </script>
+   <script>
+      const socket = io();
+
+      function upload(files) {
+        socket.emit("upload", files[0], (status) => {
+          console.log(status);
+        });
+      }
+    </script>
+   
    <body>
+
       <div id="error-container"></div>
       <input id="name" type="text" name="name" value="" placeholder="Enter your name!">
       <button type="button" name="button" onclick="setUsername()">Let me chat!</button>
