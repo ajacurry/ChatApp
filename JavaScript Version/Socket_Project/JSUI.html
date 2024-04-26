@@ -41,35 +41,7 @@
           console.log(status);
         });
       }
-
-
-        document.getElementById('send-button').addEventListener('click', () => {
-            const fileInput = document.getElementById('file-input');
-            const file = fileInput.files[0];
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    const fileData = {
-                        name: file.name,
-                        type: file.type,
-                        data: reader.result
-                    };
-                    socket.emit('file', fileData);
-                    fileInput.value = ''; // Clear file input after sending
-                };
-            }
-        });
-        socket.on('file', (fileData) => {
-            // Handle received files
-            const chatMessages = document.getElementById('chat-messages');
-            const fileLink = document.createElement('a');
-            fileLink.href = fileData.data;
-            fileLink.download = fileData.name;
-            fileLink.innerText = `Received file: ${fileData.name}`;
-            chatMessages.appendChild(fileLink);
-        });
+        
     </script>
    
    <body>
