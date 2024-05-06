@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Chat App</title>
+</head>
+<body>
+   <div id="error-container"></div>
+   <input id="name" type="text" name="name" value="" placeholder="Enter your name!">
+   <button type="button" name="button" onclick="setUsername()">Let me chat!</button>
+
+   <script src="/socket.io/socket.io.js"></script>
+   <script>
+      var socket = io();
+      var user;
+
+      function setUsername(){
+         socket.emit('setUsername', document.getElementById('name').value);
+      }
+
+      socket.on('userExists', function(data){
+         document.getElementById('error-container').innerHTML = data;
+      });
+
+      socket.on('userSet', function(data){
+         user = data.username;
+         document.body.innerHTML = '<input type="text" id="message">\
+            <button type="button" name="button" onclick="sendMessage()">Send</button>\
+            <div id="message-container"></div>\
+            <input type="file" id="fileInput" />\
+            <button type="button" onclick="upload()">Upload</button>';
+
+         var messageContainer = document.getElementById('message-container');
+
+         socket.on('newmsg', function(data){
+            if(user){
+               messageContainer.innerHTML += '<div><b>' + data.user + '</b>: ' + data.message + '</div>';
+            }
+         });
+      });
+
+      function sendMessage(){
+         var msg = document.getElementById('message').value;
+         if(msg){
+            socket.emit('msg', {message: msg, user: user});
+         }
+      }
+
+      function upload() {
+         var fileInput = document.getElementById('fileInput');
+         var file = fileInput.files[0];
+         if (file) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+               // Send the file data to the server
+               var fileData = event.target.result;
+               socket.emit('upload', fileData);
+            };
+            reader.readAsArrayBuffer(file);
+         } else {
+            alert('Please select a file.');
+         }
+      }
+   </script>
+</body>
+</html>
+
