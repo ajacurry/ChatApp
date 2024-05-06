@@ -1,3 +1,3 @@
 When you use this code...
-User 1 is able to send a message to User 2
+User 1 is able to send a message to User 2 and
 User 1 is able to send a file to User 2, but it shows up as "<Buffer 89 50 4e 47 0d 0a ... ... 7507 more bytes>"
