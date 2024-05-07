@@ -28,8 +28,7 @@ io.on('connection', function(socket){
    socket.on("upload", function(data){
      console.log(data); 
 
-     // You can handle the file data here, such as saving it to a file
-     // For example, to save the file to /tmp/upload
+     
      fs.writeFile("/tmp/upload", data, (err) => {
        if (err) {
          console.error(err);
