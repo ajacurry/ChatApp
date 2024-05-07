@@ -19,7 +19,7 @@
          user = data.username;
          document.body.innerHTML = '<input type="text" id="message">\
          <button type="button" name="button" onclick="sendMessage()">Send</button>\
-         <div id="message-container"></div>\ <input type="file" onchange="upload(this.files)" />\ <script  src="/JS.js"><script>';
+         <div id="message-container"></div>\<div id="file-container"></div>\ <input type="file" onchange="upload(this.files)" />\ <script  src="/JS.js"><script>';
       });
       function sendMessage(){
          var msg = document.getElementById('message').value;
@@ -30,6 +30,7 @@
       socket.on('newmsg', function(data){
          if(user){
             document.getElementById('message-container').innerHTML +='<div><b>' + data.user + '</b>: ' + data.message + '</div>'
+
          }
       })
    </script>
@@ -39,6 +40,7 @@
       function upload(files) {
         socket.emit("upload", files[0], (status) => {
           console.log(status);
+
         });
       }
         

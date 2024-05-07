@@ -3,6 +3,8 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+const fs = require('fs');
+
 
 app.get('/', function(req, res){
    res.sendFile('JSUI.html', {root: '.'});
@@ -33,8 +35,11 @@ io.on("connection", (socket) => {
        callback({ message: err ? "failure" : "success" });
      });
    });
- });
+  
 
+
+ });
+  
 
 http.listen(3000, function(){
    console.log('listening on localhost:3000');
