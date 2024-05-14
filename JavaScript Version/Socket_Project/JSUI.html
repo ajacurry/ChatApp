@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Chat App</title>
+   
+   <div class="header">
+      <h1>Chat Application</h1>
+    </div>
+    
+</head>
+<div class="footer">
+   <p></p>
+ </div>
+ 
+<div id="IN">
+   <p> Enter a username below to get started.</p>
+
+   <div id="error-container"></div>
+   <input id="name" type="text" name="name" value="" placeholder="Enter your name">
+   <button type="button" name="button" onclick="setUsername()">Let's chat</button>
+
+   <script src="/socket.io/socket.io.js"></script>
+   <script>
+      
+      var socket = io();
+      var user;
+
+      function setUsername(){
+         socket.emit('setUsername', document.getElementById('name').value);
+      }
+
+      socket.on('userExists', function(data){
+         document.getElementById('error-container').innerHTML = data;
+      });
+
+      socket.on('userSet', function(data){
+         user = data.username;
+         document.getElementById("IN").innerHTML = '<input type="text" id="message">\
+            <button type="button" name="button" onclick="sendMessage()">Send</button>\
+            <div id="message-container"></div>\
+            <input type="file" id="fileInput" />\
+            <button type="button" onclick="upload()">Upload</button> <button id="downloadButton" type="button" onclick="download()">Download</button>';
+
+         var messageContainer = document.getElementById('message-container');
+
+         socket.on('newmsg', function(data){
+            if(user){
+               messageContainer.innerHTML += '<div><b>' + data.user + '</b>: ' + data.message + '</div>';
+            }
+         });
+      });
+
+      function sendMessage(){
+         var msg = document.getElementById('message').value;
+         if(msg){
+            socket.emit('msg', {message: msg, user: user});
+         }
+      }
+ var currFile = null;
+      function upload() {
+         var fileInput = document.getElementById('fileInput');
+         var file = fileInput.files[0];
+        
+         if (file) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+               var fileData = event.target.result;
+               socket.emit('upload', fileData);
+               currFile = fileData;
+            };
+            reader.readAsArrayBuffer(file);
+         } else {
+            alert('Please select a file.');
+         }
+      }
+     
+      const fetch = require('node-fetch');
+const path = require('path');
+const fs = require('fs');     
+const filePath = path.join(__dirname, currFile);
+
+function download(){
+   let file = currFile
+
+fetch (file)
+.then(x => x.text())
+.then(y => document.getElementById("message-container").innerHTML = y);
+
+}
+
+
+      function downloadFile(url, fileName) {
+         console.log("Downloading");
+
+         try{
+            console.log("Downloading");
+            fetch(url, { method: 'get', mode: 'no-cors', referrerPolicy: 'no-referrer' })
+    .then(res => res.blob())
+    .then(res => {
+      const aElement = document.createElement('a');
+      aElement.setAttribute('download', fileName);
+      const href = URL.createObjectURL(res);
+      aElement.href = href;
+      aElement.setAttribute('target', '_blank');
+      aElement.click();
+      URL.revokeObjectURL(href);
+    });
+
+         }
+         catch(error){
+            console.error("Error downloading file", error);
+         }
+      
+};
+   </script>
+   
+</div>
+<style>
+   .header {
+  padding: 5px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 20px;
+  
+}
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: rgb(154, 151, 151);
+   color: white;
+   text-align: center;
+}
+</style>
+</html>
