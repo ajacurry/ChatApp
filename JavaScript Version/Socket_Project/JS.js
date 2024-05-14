@@ -1,16 +1,14 @@
 var app = require('express')();
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
 var fs = require('fs');
+var io = require('socket.io')(http);
 
 app.get('/', function(req, res){
    res.sendFile('JSUI.html', {root: '.'});
 });
-   
 users = [];
 io.on('connection', function(socket){
    console.log('A user is connecting');
-
    socket.on('setUsername', function(data){
       console.log(data);
       if(users.indexOf(data) > -1){
@@ -26,11 +24,8 @@ io.on('connection', function(socket){
    socket.on('msg', function(data){
       io.sockets.emit('newmsg', data);
    });
-
    socket.on("upload", function(data){
      console.log(data); 
-   
-     
      fs.writeFile("./upload", data, (err) => {
        if (err) {
          console.error(err);
